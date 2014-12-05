@@ -1,10 +1,10 @@
-require 'colorize'
 require './cell'
+require './gamecell'
 
 class Board
   def initialize(width, height)
     @width, @height = width, height
-    @grid = Array.new(height) { Array.new(width, 0) }
+    @grid = Array.new(height) { Array.new(width, GameCell.new(0)) }
     Cell.setPadding(1)
   end
 
@@ -38,14 +38,14 @@ class Board
 
       if horizontal
         (0...ship.get_size).each do |index|
-          if @grid[y][x+index] != 0 
+          if @grid[y][x+index].contains_ship?
             can_fit = false
             break
           end
         end
       else
         (0...ship.get_size).each do |index|
-          if @grid[y+index][x] != 0 
+          if @grid[y+index][x].contains_ship? 
             can_fit = false
             break
           end
@@ -54,9 +54,9 @@ class Board
     end
 
     if horizontal
-      (0...ship.get_size).each { |index| @grid[y][x+index] = 1}
+      (0...ship.get_size).each { |index| @grid[y][x+index] = GameCell.new(1)}
     else
-      (0...ship.get_size).each { |index| @grid[y+index][x] = 1}
+      (0...ship.get_size).each { |index| @grid[y+index][x] = GameCell.new(1)}
     end
   end
 
@@ -71,9 +71,8 @@ class Board
     @grid.each_with_index do |row, index|
       print Cell.new(index).to_s
 
-      row.each do |cellData|
-        cell = Cell.new cellData.to_s
-        print cell.to_s.colorize(:background => :blue)
+      row.each do |cell|
+        print cell.to_s
       end
 
       puts ""
