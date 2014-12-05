@@ -1,4 +1,3 @@
-require './ship'
 class Board
   def initialize(width, height)
     @width, @height = width, height
@@ -9,6 +8,11 @@ class Board
 
   def make_cell(data)
     " "*@padding << data.to_s << " "*@padding
+  end
+
+  def load_ships(ships)
+    $ships = ships
+    ships.each { |ship| place_ship ship }
   end
 
   def place_ship(ship)
@@ -59,21 +63,6 @@ class Board
   end
 
   def draw
-
-    ship = Ship.new 'bob', 5
-    place_ship ship
-
-    ship = Ship.new 'bob', 2
-    place_ship ship
-
-    ship = Ship.new 'bob', 3
-    place_ship ship
-
-    ship = Ship.new 'bob', 7
-    place_ship ship
-
-    ship = Ship.new 'bob', 3
-    place_ship ship
 
     # Print x coords bar
     print make_cell " "
