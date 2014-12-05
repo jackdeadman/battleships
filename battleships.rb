@@ -1,4 +1,4 @@
-require 'colorize'
+require './ship.rb'
 require './board'
 
 if __FILE__ == $0
