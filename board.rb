@@ -1,13 +1,11 @@
+require 'colorize'
+require './cell'
+
 class Board
   def initialize(width, height)
     @width, @height = width, height
     @grid = Array.new(height) { Array.new(width, 0) }
-    @padding = 1
-  end
-
-
-  def make_cell(data)
-    " "*@padding << data.to_s << " "*@padding
+    Cell.setPadding(1)
   end
 
   def load_ships(ships)
@@ -65,14 +63,19 @@ class Board
   def draw
 
     # Print x coords bar
-    print make_cell " "
-    (0...@grid.length).each { |x_coord| print make_cell x_coord }
+    print Cell.new(" ").to_s
+    (0...@grid.length).each { |x_coord| print Cell.new(x_coord).to_s }
     puts ""
   
     # Print cells
     @grid.each_with_index do |row, index|
-      print make_cell index
-      row.each { |cell| print make_cell cell }
+      print Cell.new(index).to_s
+
+      row.each do |cellData|
+        cell = Cell.new cellData.to_s
+        print cell.to_s.colorize(:background => :blue)
+      end
+
       puts ""
     end
 
