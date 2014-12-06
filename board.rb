@@ -6,7 +6,7 @@ class Board
     @width, @height = width, height
     @grid = Array.new(height) { Array.new(width, 0) }
     # fills array with unique references
-    @grid.each_with_index { |row, i| row.each_with_index { |data, j| @grid[i][j] = GameCell.new() } }
+    @grid.each_with_index { |row, i| row.each_with_index { |data, j| @grid[i][j] = GameCell.new(:water) } }
     Cell.setPadding(1)
   end
 
@@ -63,7 +63,6 @@ class Board
   end
 
   def draw
-
     # Print x coords bar
     print Cell.new(" ").to_s
     (0...@grid.length).each { |x_coord| print Cell.new(x_coord).to_s }
@@ -82,7 +81,18 @@ class Board
   end
 
   def fire(x,y)
-    puts @grid[y][x].fire
+    @grid[y][x].fire
   end
 
+  def cell_taken? (x,y)
+    @grid[y][x].chosen?
+  end
+
+  def destroyed? (x,y)
+    @grid[y][x].destroyed?
+  end
+
+  def all_destroyed?
+    puts @ships
+  end
 end
