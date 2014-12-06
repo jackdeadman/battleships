@@ -4,7 +4,9 @@ require './gamecell'
 class Board
   def initialize(width, height)
     @width, @height = width, height
-    @grid = Array.new(height) { Array.new(width, GameCell.new(0)) }
+    @grid = Array.new(height) { Array.new(width, 0) }
+    # fills array with unique references
+    @grid.each_with_index { |row, i| row.each_with_index { |data, j| @grid[i][j] = GameCell.new() } }
     Cell.setPadding(1)
   end
 
@@ -54,9 +56,9 @@ class Board
     end
 
     if horizontal
-      (0...ship.get_size).each { |index| @grid[y][x+index] = GameCell.new(1)}
+      (0...ship.get_size).each { |index| @grid[y][x+index] = GameCell.new(ship)}
     else
-      (0...ship.get_size).each { |index| @grid[y+index][x] = GameCell.new(1)}
+      (0...ship.get_size).each { |index| @grid[y+index][x] = GameCell.new(ship)}
     end
   end
 
@@ -77,7 +79,10 @@ class Board
 
       puts ""
     end
+  end
 
+  def fire(x,y)
+    puts @grid[y][x].fire
   end
 
 end

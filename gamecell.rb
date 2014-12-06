@@ -1,25 +1,25 @@
 require 'colorize'
 
 class GameCell < Cell
-  def initialize(data)
-    @chosen = true
-    @contains_ship = false
-    if data == 1
-      @contains_ship = true
-    end
+  def initialize(data = :water)
+    @chosen = false
     super(data)
   end
   
   def contains_ship?
-    @contains_ship
+    @data.is_a? Ship
+  end
+
+  def fire
+    @chosen = true
   end
 
   def to_s
     if @chosen
-      if @contains_ship
+      if self.contains_ship?
         super.to_s.colorize(:background=>:red)
       else
-        super.to_s.colorize(:background=>:blue)
+        (" "*@@padding << "*" << " "*@@padding).colorize(:background=>:green)
       end
     else
       (" "*@@padding << "-" << " "*@@padding).colorize(:background=>:white, :color=>:black)

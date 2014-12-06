@@ -1,4 +1,4 @@
-require './ship.rb'
+require './ship'
 require './board'
 
 if __FILE__ == $0
@@ -14,5 +14,7 @@ if __FILE__ == $0
     Ship.new("destroyer", 3),
     Ship.new("sub-marine", 2)
   ]
+  board.draw
+  board.fire 1,1
   board.draw
 end
