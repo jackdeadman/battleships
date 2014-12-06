@@ -14,7 +14,27 @@ if __FILE__ == $0
     Ship.new("destroyer", 3),
     Ship.new("sub-marine", 2)
   ]
-  board.draw
-  board.fire 1,1
-  board.draw
+
+  end_game = false
+
+  until end_game
+    board.draw
+
+    free_cell = false
+    until free_cell do
+      print "x: "
+      x = gets.chomp.to_i
+      print "y: "
+      y = gets.chomp.to_i
+
+      if board.cell_taken? x, y
+        puts "Already taken please enter another cell"
+      else
+        free_cell = true
+      end
+    end
+    board.fire x,y
+
+    board.all_destroyed
+  end
 end
