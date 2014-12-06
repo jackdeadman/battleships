@@ -16,8 +16,9 @@ if __FILE__ == $0
   ]
 
   end_game = false
-
+  moves = 0
   until end_game
+    moves += 1
     board.draw
 
     free_cell = false
@@ -35,6 +36,10 @@ if __FILE__ == $0
     end
     board.fire x,y
 
-    board.all_destroyed
+    if board.all_destroyed?
+      board.draw
+      puts "Won in #{moves} moves"
+      end_game = true
+    end
   end
 end

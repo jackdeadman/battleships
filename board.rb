@@ -11,7 +11,7 @@ class Board
   end
 
   def load_ships(ships)
-    $ships = ships
+    @ships = ships
     ships.each { |ship| place_ship ship }
   end
 
@@ -93,6 +93,8 @@ class Board
   end
 
   def all_destroyed?
-    puts @ships
+    count = 0
+    @ships.each { |ship| count += 1 if ship.destroyed? }
+    @ships.length == count
   end
 end
