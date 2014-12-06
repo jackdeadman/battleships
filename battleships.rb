@@ -17,19 +17,20 @@ if __FILE__ == $0
 
   end_game = false
   moves = 0
+  board.draw
   until end_game
-    moves += 1
-    board.draw
 
     free_cell = false
+
     until free_cell do
+      puts "Please enter a coordinate."
       print "x: "
       x = gets.chomp.to_i
       print "y: "
       y = gets.chomp.to_i
 
       unless (0...BOARD_WIDTH).include?(x) && (0...BOARD_HEIGHT).include?(y)
-        puts "Please enter a value coordinate"
+        puts "Please enter a valud coordinate"
         next
       end
 
@@ -39,14 +40,21 @@ if __FILE__ == $0
         free_cell = true
       end
     end
+    moves += 1
     board.fire x,y
+    board.draw
 
     if board.ship_destroyed? x,y
-      puts "Destroyed a #{board.get_ship(x, y).get_name}"  
+      puts "Hit! Destroyed a #{board.get_ship(x, y).get_name}"  
+    elsif board.hit?
+      puts "Hit!" 
+    elsif board.near_miss?
+      puts "Near miss!"
+    else
+      puts "Miss!" 
     end
 
     if board.all_destroyed?
-      board.draw
       puts "Won in #{moves} moves"
       end_game = true
     end
