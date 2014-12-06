@@ -1,13 +1,11 @@
 require './cell'
 require './gamecell'
+require 'matrix'
 
 class Board
-  def initialize(width, height)
+  def initialize(width = 10, height = 10)
     @width, @height = width, height
-    @grid = Array.new(height) { Array.new(width, 0) }
-    
-    # fills array with unique references
-    @grid.each_with_index { |row, i| row.each_with_index { |data, j| @grid[i][j] = GameCell.new(:water) } }
+    @grid = Matrix.build(width, height) { |row, column| GameCell.new :water}
     Cell.set_padding(1)
 
     @Result = Struct.new(:hit, :destroyed, :near_miss)
@@ -43,14 +41,14 @@ class Board
 
       if horizontal
         (0...ship.get_size).each do |index|
-          if @grid[y][x+index].contains_ship?
+          if @grid[y, x+index].contains_ship?
             can_fit = false
             break
           end
         end
       else
         (0...ship.get_size).each do |index|
-          if @grid[y+index][x].contains_ship? 
+          if @grid[y+index, x].contains_ship? 
             can_fit = false
             break
           end
@@ -59,20 +57,20 @@ class Board
     end
 
     if horizontal
-      (0...ship.get_size).each { |index| @grid[y][x+index] = GameCell.new(ship)}
+      (0...ship.get_size).each { |index| @grid.send(:[]=,y,x+index, GameCell.new(ship) ) }
     else
-      (0...ship.get_size).each { |index| @grid[y+index][x] = GameCell.new(ship)}
+      (0...ship.get_size).each { |index| @grid.send(:[]=,y+index,x, GameCell.new(ship) ) }
     end
   end
 
   def draw
     # Print x coords bar
     print Cell.new(" ").to_s
-    (0...@grid.length).each { |x_coord| print Cell.new(x_coord).to_s }
+    (0...@grid.column_count).each { |x_coord| print Cell.new(x_coord).to_s }
     puts ""
   
     # Print cells
-    @grid.each_with_index do |row, index|
+    @grid.to_a.each_with_index do |row, index|
       print Cell.new(index).to_s # Print y coord
 
       row.each do |cell|
@@ -84,7 +82,7 @@ class Board
   end
 
   def fire(x,y)
-    cell = @grid[y][x]
+    cell = @grid[y, x]
     cell.fire
     hit = cell.contains_ship?
     ship_destroyed = cell.destroyed?
@@ -93,11 +91,11 @@ class Board
   end
 
   def cell_taken? (x,y)
-    @grid[y][x].chosen?
+    @grid[y, x].chosen?
   end
 
   def get_ship (x,y)
-    @grid[y][x].get_data
+    @grid[y, x].get_data
   end
 
   def all_destroyed?
