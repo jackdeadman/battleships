@@ -11,13 +11,34 @@ class GameCell < Cell
   end
 
   def fire
-    @chosen = true
+    if @chosen
+      return false
+    else
+      if self.contains_ship?
+        @data.fire
+      end
+      @chosen = true
+    end
+  end
+
+  def destroyed?
+    if self.contains_ship?
+      @data.destroyed?
+    end
+  end
+
+  def chosen?
+    @chosen
   end
 
   def to_s
     if @chosen
       if self.contains_ship?
-        super.to_s.colorize(:background=>:red)
+        if self.destroyed?
+          super.to_s.colorize(:background=>:black)
+        else
+          super.to_s.colorize(:background=>:red)
+        end
       else
         (" "*@@padding << "*" << " "*@@padding).colorize(:background=>:green)
       end
