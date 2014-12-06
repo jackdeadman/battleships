@@ -28,6 +28,11 @@ if __FILE__ == $0
       print "y: "
       y = gets.chomp.to_i
 
+      unless (0...BOARD_WIDTH).include?(x) && (0...BOARD_HEIGHT).include?(y)
+        puts "Please enter a value coordinate"
+        next
+      end
+
       if board.cell_taken? x, y
         puts "Already taken please enter another cell"
       else
@@ -35,6 +40,10 @@ if __FILE__ == $0
       end
     end
     board.fire x,y
+
+    if board.ship_destroyed? x,y
+      puts "Destroyed a #{board.get_ship(x, y).get_name}"  
+    end
 
     if board.all_destroyed?
       board.draw

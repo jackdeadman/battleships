@@ -7,7 +7,7 @@ class Board
     @grid = Array.new(height) { Array.new(width, 0) }
     # fills array with unique references
     @grid.each_with_index { |row, i| row.each_with_index { |data, j| @grid[i][j] = GameCell.new(:water) } }
-    Cell.setPadding(1)
+    Cell.set_padding(1)
   end
 
   def load_ships(ships)
@@ -76,7 +76,7 @@ class Board
         print cell.to_s
       end
 
-      puts ""
+      puts " "
     end
   end
 
@@ -88,8 +88,12 @@ class Board
     @grid[y][x].chosen?
   end
 
-  def destroyed? (x,y)
+  def ship_destroyed? (x,y)
     @grid[y][x].destroyed?
+  end
+
+  def get_ship (x,y)
+    @grid[y][x].get_data
   end
 
   def all_destroyed?

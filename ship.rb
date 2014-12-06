@@ -16,6 +16,10 @@ class Ship
     @hits == @size
   end
 
+  def get_name 
+    @name
+  end
+  
   def to_s
     "S"
   end
