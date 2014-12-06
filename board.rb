@@ -5,9 +5,12 @@ class Board
   def initialize(width, height)
     @width, @height = width, height
     @grid = Array.new(height) { Array.new(width, 0) }
+    
     # fills array with unique references
     @grid.each_with_index { |row, i| row.each_with_index { |data, j| @grid[i][j] = GameCell.new(:water) } }
     Cell.set_padding(1)
+
+    @Result = Struct.new(:hit, :destroyed, :near_miss)
   end
 
   def load_ships(ships)
@@ -81,7 +84,12 @@ class Board
   end
 
   def fire(x,y)
-    @grid[y][x].fire
+    cell = @grid[y][x]
+    cell.fire
+    hit = cell.contains_ship?
+    ship_destroyed = cell.destroyed?
+
+    @Result.new hit, ship_destroyed, false
   end
 
   def cell_taken? (x,y)
@@ -97,8 +105,7 @@ class Board
   end
 
   def all_destroyed?
-    count = 0
-    @ships.each { |ship| count += 1 if ship.destroyed? }
-    @ships.length == count
+    @ships.each { |ship| return false unless ship.destroyed? }
+    true
   end
 end

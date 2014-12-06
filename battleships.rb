@@ -3,7 +3,7 @@ require './board'
 
 if __FILE__ == $0
   BOARD_WIDTH = 10
-  BOARD_HEIGHT = 10
+  BOARD_HEIGHT = 10 
 
   board = Board.new BOARD_WIDTH, BOARD_HEIGHT
   
@@ -41,14 +41,14 @@ if __FILE__ == $0
       end
     end
     moves += 1
-    board.fire x,y
+    result = board.fire x, y
     board.draw
 
-    if board.ship_destroyed? x,y
+    if result["destroyed"]
       puts "Hit! Destroyed a #{board.get_ship(x, y).get_name}"  
-    elsif board.hit?
+    elsif result["hit"]
       puts "Hit!" 
-    elsif board.near_miss?
+    elsif result["near_miss"]
       puts "Near miss!"
     else
       puts "Miss!" 
