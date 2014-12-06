@@ -22,7 +22,7 @@ if __FILE__ == $0
 
     free_cell = false
 
-    until free_cell do
+    until free_cell
       puts "Please enter a coordinate."
       print "x: "
       x = gets.chomp.to_i

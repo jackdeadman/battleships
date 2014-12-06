@@ -56,10 +56,11 @@ class Board
       end
     end
 
+    # Grid is converted to an array as Matrix class is immutable
     if horizontal
-      (0...ship.get_size).each { |index| @grid.send(:[]=,y,x+index, GameCell.new(ship) ) }
+      (0...ship.get_size).each { |index| @grid.to_a[y][x+index] = GameCell.new(ship)}
     else
-      (0...ship.get_size).each { |index| @grid.send(:[]=,y+index,x, GameCell.new(ship) ) }
+      (0...ship.get_size).each { |index| @grid.to_a[y+index][x] = GameCell.new(ship)}
     end
   end
 
