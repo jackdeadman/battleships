@@ -30,7 +30,7 @@ if __FILE__ == $0
       y = gets.chomp.to_i
 
       unless (0...BOARD_WIDTH).include?(x) && (0...BOARD_HEIGHT).include?(y)
-        puts "Please enter a valud coordinate"
+        puts "Please enter a valid coordinate"
         next
       end
 

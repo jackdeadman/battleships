@@ -73,13 +73,13 @@ class Board
   
     # Print cells
     @grid.each_with_index do |row, index|
-      print Cell.new(index).to_s
+      print Cell.new(index).to_s # Print y coord
 
       row.each do |cell|
         print cell.to_s
       end
 
-      puts " "
+      puts ""
     end
   end
 
@@ -94,10 +94,6 @@ class Board
 
   def cell_taken? (x,y)
     @grid[y][x].chosen?
-  end
-
-  def ship_destroyed? (x,y)
-    @grid[y][x].destroyed?
   end
 
   def get_ship (x,y)
