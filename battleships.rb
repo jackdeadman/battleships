@@ -1,61 +1,71 @@
 require './ship'
 require './board'
+require 'terminal-display-formats'
+
+def get_coords
+  puts "Please enter coordinate: ".bold
+  print "x: "
+  x = gets.chomp.to_i
+  print "y: "
+  y = gets.chomp.to_i
+
+  Point.new x, y
+end
 
 if __FILE__ == $0
   BOARD_WIDTH = 10
   BOARD_HEIGHT = 10 
 
+  Point = Struct.new :x, :y
+
   board = Board.new BOARD_WIDTH, BOARD_HEIGHT
   
   board.load_ships [
-    Ship.new("aircraft carrier", 5),
-    Ship.new("cruiser", 4),
-    Ship.new("destroyer", 3),
-    Ship.new("destroyer", 3),
-    Ship.new("sub-marine", 2)
+    Ship.new("Aircraft Carrier", 5),
+    Ship.new("Cruiser", 4),
+    Ship.new("Destroyer", 3),
+    Ship.new("Destroyer", 3),
+    Ship.new("Sub-marine", 2)
   ]
 
   end_game = false
   moves = 0
   board.draw
   until end_game
-
     free_cell = false
 
     until free_cell
-      puts "Please enter a coordinate."
-      print "x: "
-      x = gets.chomp.to_i
-      print "y: "
-      y = gets.chomp.to_i
+      point = get_coords
 
-      unless (0...BOARD_WIDTH).include?(x) && (0...BOARD_HEIGHT).include?(y)
-        puts "Please enter a valid coordinate"
-        next
-      end
+      valid_coord = (0...BOARD_WIDTH).include?(point.x) && (0...BOARD_HEIGHT).include?(point.y)
 
-      if board.cell_taken? x, y
-        puts "Already taken please enter another cell"
+      if !valid_coord
+        puts "The coordinate #{point.x}, #{point.y} is not valid.".bold
+      elsif board.cell_taken? point
+        puts "\nAlready taken please enter another coordinate.\n".bold
       else
         free_cell = true
       end
     end
+
     moves += 1
-    result = board.fire x, y
+    result = board.fire point
     board.draw
 
-    if result["destroyed"]
-      puts "Hit! Destroyed a #{board.get_ship(x, y).get_name}"  
-    elsif result["hit"]
-      puts "Hit!" 
-    elsif result["near_miss"]
+    print "\nFeedback: ".bold
+    if result.destroyed
+      puts "Hit! Destroyed a #{board.get_ship(point).get_name}." 
+    elsif result.hit
+      puts "You have hit a ship at #{point.x}, #{point.y}!"
+    elsif result.near_miss
       puts "Near miss!"
     else
-      puts "Miss!" 
+      puts "Miss!"
     end
+    puts "Score: ".bold + moves.to_s + "\n\n"
 
     if board.all_destroyed?
-      puts "Won in #{moves} moves"
+      puts "\nWon in #{moves} moves".bold
       end_game = true
     end
   end
