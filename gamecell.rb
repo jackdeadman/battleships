@@ -13,12 +13,10 @@ class GameCell < Cell
   def fire
     if @chosen
       return false
-    else
-      if self.contains_ship?
+    elsif self.contains_ship?
         @data.fire
-      end
-      @chosen = true
     end
+      @chosen = true
   end
 
   def destroyed?
