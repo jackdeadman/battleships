@@ -15,6 +15,10 @@ class Cell
   end
 
   def to_s
-    " "*@@padding << @data.to_s << " "*@@padding
+    " "*@@padding + @data.to_s + " "*@@padding
+  end
+
+  def draw
+    print to_s
   end
 end

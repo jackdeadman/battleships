@@ -3,12 +3,12 @@ require './gamecell'
 require 'matrix'
 
 class Board
-  def initialize(width = 10, height = 10)
+  def initialize(width, height)
     @width, @height = width, height
-    @grid = Matrix.build(width, height) { |row, column| GameCell.new :water}
+    @grid = Matrix.build(width, height) { GameCell.new :water }
     Cell.set_padding(1)
 
-    @Result = Struct.new(:hit, :destroyed, :near_miss)
+    @Result = Struct.new :hit, :destroyed, :near_miss
   end
 
   def load_ships(ships)
@@ -22,7 +22,7 @@ class Board
 
     until can_fit
 
-      horizontal = rand(2) == 1  
+      horizontal = rand(2) == 1
 
       # Limit search space
       if horizontal
@@ -56,34 +56,33 @@ class Board
       end
     end
 
-    # Grid is converted to an array as Matrix class is immutable
     if horizontal
-      (0...ship.get_size).each { |index| @grid.to_a[y][x+index] = GameCell.new(ship)}
+      (0...ship.get_size).each { |index| @grid.send(:[]=,y,x+index, GameCell.new(ship)) }
     else
-      (0...ship.get_size).each { |index| @grid.to_a[y+index][x] = GameCell.new(ship)}
+      (0...ship.get_size).each { |index| @grid.send(:[]=,y+index,x, GameCell.new(ship)) }
     end
   end
 
   def draw
     # Print x coords bar
-    print Cell.new(" ").to_s
-    (0...@grid.column_count).each { |x_coord| print Cell.new(x_coord).to_s }
+    Cell.new(" ").draw
+    (0...@grid.column_count).each { |x_coord| Cell.new(x_coord).draw }
     puts ""
   
     # Print cells
     @grid.to_a.each_with_index do |row, index|
-      print Cell.new(index).to_s # Print y coord
+      Cell.new(index).draw # Print y coord
 
       row.each do |cell|
-        print cell.to_s
+        cell.draw
       end
 
       puts ""
     end
   end
 
-  def fire(x,y)
-    cell = @grid[y, x]
+  def fire(point)
+    cell = @grid[point.y, point.x]
     cell.fire
     hit = cell.contains_ship?
     ship_destroyed = cell.destroyed?
@@ -91,12 +90,12 @@ class Board
     @Result.new hit, ship_destroyed, false
   end
 
-  def cell_taken? (x,y)
-    @grid[y, x].chosen?
+  def cell_taken?(point)
+    @grid[point.y, point.x].chosen?
   end
 
-  def get_ship (x,y)
-    @grid[y, x].get_data
+  def get_ship(point)
+    @grid[point.y, point.x].get_data
   end
 
   def all_destroyed?
