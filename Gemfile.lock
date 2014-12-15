@@ -1,0 +1,12 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    colorize (0.7.4)
+    terminal-display-formats (0.0.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  colorize
+  terminal-display-formats
