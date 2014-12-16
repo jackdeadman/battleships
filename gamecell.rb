@@ -38,10 +38,10 @@ class GameCell < Cell
           super.to_s.colorize(:background=>:red)
         end
       else
-        (" "*@@padding << " " << " "*@@padding).colorize(:background=>:blue)
+        (" " * @@padding + " " + " " * @@padding).colorize(:background=>:blue)
       end
     else
-      (" "*@@padding << "-" << " "*@@padding).colorize(:background=>:white, :color=>:black)
+      (" " * @@padding + "-" + " " * @@padding).colorize(:background=>:white, :color=>:black)
     end
   end
 end
