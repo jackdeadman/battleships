@@ -1,11 +1,14 @@
 require './cell'
 require './gamecell'
 require 'matrix'
+require './grid'
 
 class Board
   def initialize(width, height)
     @width, @height = width, height
-    @grid = Matrix.build(width, height) { GameCell.new :water }
+    @grid = Grid.new width, height
+    @grid.set_all { GameCell.new :water }
+
     Cell.set_padding(1)
 
     @Result = Struct.new :hit, :destroyed, :near_miss
@@ -41,14 +44,14 @@ class Board
 
       if horizontal
         (0...ship.get_size).each do |index|
-          if @grid[y, x+index].contains_ship?
+          if @grid.get_cell(y, x+index).contains_ship?
             can_fit = false
             break
           end
         end
       else
         (0...ship.get_size).each do |index|
-          if @grid[y+index, x].contains_ship? 
+          if @grid.get_cell(y+index, x).contains_ship? 
             can_fit = false
             break
           end
@@ -57,16 +60,16 @@ class Board
     end
 
     if horizontal
-      (0...ship.get_size).each { |index| @grid.send(:[]=,y,x+index, GameCell.new(ship)) }
+      (0...ship.get_size).each { |index| @grid.set_cell(y,x+index, GameCell.new(ship)) }
     else
-      (0...ship.get_size).each { |index| @grid.send(:[]=,y+index,x, GameCell.new(ship)) }
+      (0...ship.get_size).each { |index| @grid.set_cell(y+index,x, GameCell.new(ship)) }
     end
   end
 
   def draw
     # Print x coords bar
     Cell.new(" ").draw
-    (0...@grid.column_count).each { |x_coord| Cell.new(x_coord).draw }
+    (0...@width).each { |x_coord| Cell.new(x_coord).draw }
     puts ""
   
     # Print cells
@@ -82,24 +85,30 @@ class Board
   end
 
   def fire(point)
-    cell = @grid[point.y, point.x]
+    cell = @grid.get_cell point.y, point.x
     cell.fire
     hit = cell.contains_ship?
+    near_miss = near_miss? point
     ship_destroyed = cell.destroyed?
 
-    @Result.new hit, ship_destroyed, false
+    @Result.new hit, ship_destroyed, near_miss
+  end
+
+  def near_miss?(point)
+    @grid.adjacent_cells(point.x, point.y).each { |cell| return true if cell.contains_ship? && !cell.chosen? }
+    return false
   end
 
   def cell_taken?(point)
-    @grid[point.y, point.x].chosen?
+    @grid.get_cell(point.y, point.x).chosen?
   end
 
   def get_ship(point)
-    @grid[point.y, point.x].get_data
+    @grid.get_cell(point.y, point.x).get_data
   end
 
   def all_destroyed?
-    @ships.each { |ship| return false unless ship.destroyed? }
+    @ships.each { |ship| return false unless ship.destroyed?}
     true
   end
 end
