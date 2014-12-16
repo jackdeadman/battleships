@@ -10,8 +10,6 @@ class Board
     @grid.set_all { GameCell.new :water }
 
     Cell.set_padding(1)
-
-    @Result = Struct.new :hit, :destroyed, :near_miss
   end
 
   def load_ships(ships)
@@ -87,16 +85,15 @@ class Board
   def fire(point)
     cell = @grid.get_cell point.y, point.x
     cell.fire
-    hit = cell.contains_ship?
-    near_miss = near_miss? point
-    ship_destroyed = cell.destroyed?
 
-    @Result.new hit, ship_destroyed, near_miss
+    {"hit" => cell.contains_ship?,
+     "ship_destroyed" => cell.contains_destroyed?,
+     "near_miss" => near_miss?(point)}
   end
 
   def near_miss?(point)
     @grid.adjacent_cells(point.x, point.y).each { |cell| return true if cell.contains_ship? && !cell.chosen? }
-    return false
+    false
   end
 
   def cell_taken?(point)

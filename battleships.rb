@@ -53,11 +53,11 @@ if __FILE__ == $0
     board.draw
 
     print "\nFeedback: ".bold
-    if result.destroyed
+    if result["ship_destroyed"]
       puts "Hit! Destroyed a #{board.get_ship(point).get_name}." 
-    elsif result.hit
+    elsif result["hit"]
       puts "You have hit a ship at #{point.x}, #{point.y}!"
-    elsif result.near_miss
+    elsif result["near_miss"]
       puts "Near miss!"
     else
       puts "Miss!"
