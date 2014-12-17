@@ -22,8 +22,9 @@ class GameCell < Cell
   def contains_destroyed?
     if contains_ship?
       @data.destroyed?
+    else
+      false
     end
-    false
   end
 
   def chosen?
@@ -33,7 +34,7 @@ class GameCell < Cell
   def to_s
     if @chosen
       if contains_ship?
-        if @data.destroyed?
+        if contains_destroyed?
           super.to_s.colorize(:background=>:black)
         else
           super.to_s.colorize(:background=>:red)
