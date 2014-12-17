@@ -11,18 +11,18 @@ class Grid
   end
 
   def set_all
-    @cells.each_with_index { |row, i| row.each_with_index { |cell, j| @cells[i][j] = yield }}
+    @cells.each_with_index { |row, i| row.each_with_index { |_, j| @cells[i][j] = yield }}
   end
 
   def to_a
     @cells
   end
 
-  def get_cell(y, x)
+  def get_cell(x, y)
     @cells[y][x]
   end
 
-  def set_cell(y,x, value)
+  def set_cell(x, y, value)
     @cells[y][x] = value
   end
 
@@ -32,12 +32,12 @@ class Grid
     true
   end
 
-  def adjacent_cells(x,y)
+  def adjacent_cells(x, y)
     cells = []
     (-1..1).each do |i| 
       (-1..1).each do |j|
         if !(i == 0 && j == 0) && is_cell(x+i,y+j)
-          cells << get_cell(y+j, x+i)
+          cells << get_cell(x+i, y+j)
         end
       end
     end

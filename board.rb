@@ -82,26 +82,26 @@ class Board
     end
   end
 
-  def fire(point)
-    cell = @grid.get_cell point.y, point.x
+  def fire(x, y)
+    cell = @grid.get_cell x, y
     cell.fire
 
     {"hit" => cell.contains_ship?,
      "ship_destroyed" => cell.contains_destroyed?,
-     "near_miss" => near_miss?(point)}
+     "near_miss" => near_miss?(x, y)}
   end
 
-  def near_miss?(point)
-    @grid.adjacent_cells(point.x, point.y).each { |cell| return true if cell.contains_ship? && !cell.chosen? }
+  def near_miss?(x, y)
+    @grid.adjacent_cells(x, y).each { |cell| return true if cell.contains_ship? && !cell.chosen? }
     false
   end
 
-  def cell_taken?(point)
-    @grid.get_cell(point.y, point.x).chosen?
+  def cell_taken?(x, y)
+    @grid.get_cell(x, y).chosen?
   end
 
-  def get_ship(point)
-    @grid.get_cell(point.y, point.x).get_data
+  def get_ship(x, y)
+    @grid.get_cell(x, y).get_data
   end
 
   def all_destroyed?

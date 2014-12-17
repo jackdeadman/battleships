@@ -9,14 +9,27 @@ def get_coords
   print "y: "
   y = gets.chomp.to_i
 
-  Point.new x, y
+  return x, y
+end
+
+def print_feedback(feedback, x, y, board, moves)
+  print "\nFeedback: ".bold
+
+  if feedback["ship_destroyed"]
+    puts "Hit! Destroyed a #{board.get_ship(x, y).get_name}." 
+  elsif feedback["hit"]
+    puts "You have hit a ship at #{x}, #{y}!"
+  elsif feedback["near_miss"]
+    puts "Near miss!"
+  else
+    puts "Miss!"
+  end
+  puts "Score: ".bold + moves.to_s + "\n\n"
 end
 
 if __FILE__ == $0
   BOARD_WIDTH = 10
   BOARD_HEIGHT = 10 
-
-  Point = Struct.new :x, :y
 
   board = Board.new BOARD_WIDTH, BOARD_HEIGHT
   
@@ -35,13 +48,13 @@ if __FILE__ == $0
     free_cell = false
 
     until free_cell
-      point = get_coords
+      x, y = get_coords
 
-      valid_coord = (0...BOARD_WIDTH).include?(point.x) && (0...BOARD_HEIGHT).include?(point.y)
+      valid_coord = (0...BOARD_WIDTH).include?(x) && (0...BOARD_HEIGHT).include?(y)
 
       if !valid_coord
-        puts "The coordinate #{point.x}, #{point.y} is not valid.".bold
-      elsif board.cell_taken? point
+        puts "The coordinate #{x}, #{y} is not valid.".bold
+      elsif board.cell_taken? x, y
         puts "\nAlready taken please enter another coordinate.\n".bold
       else
         free_cell = true
@@ -49,20 +62,10 @@ if __FILE__ == $0
     end
 
     moves += 1
-    result = board.fire point
+    feedback = board.fire x, y
     board.draw
 
-    print "\nFeedback: ".bold
-    if result["ship_destroyed"]
-      puts "Hit! Destroyed a #{board.get_ship(point).get_name}." 
-    elsif result["hit"]
-      puts "You have hit a ship at #{point.x}, #{point.y}!"
-    elsif result["near_miss"]
-      puts "Near miss!"
-    else
-      puts "Miss!"
-    end
-    puts "Score: ".bold + moves.to_s + "\n\n"
+    print_feedback feedback, x, y, board, moves
 
     if board.all_destroyed?
       puts "\nWon in #{moves} moves".bold
