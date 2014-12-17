@@ -1,15 +1,10 @@
-require './cell'
-require './gamecell'
-require './ship'
-
 class Grid
   def initialize(width, height)
-    Cell.set_padding(1)
     @cells = Array.new(height) { Array.new (width)}
 
     @height, @width = height, width
   end
-
+  # Set all value in the 2d array to the value of the code block
   def set_all
     @cells.each_with_index { |row, i| row.each_with_index { |_, j| @cells[i][j] = yield }}
   end
@@ -31,7 +26,7 @@ class Grid
     return false if y < 0 || y > @height - 1
     true
   end
-
+  # Gets all adjacent cells (maximum of 8) of a point and returns an array
   def adjacent_cells(x, y)
     cells = []
     (-1..1).each do |i| 

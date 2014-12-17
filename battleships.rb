@@ -2,6 +2,7 @@ require './ship'
 require './board'
 require 'terminal-display-formats'
 
+# Get the coordinates from the user
 def get_coords
   puts "Please enter coordinate: ".bold
   print "x: "
@@ -12,6 +13,7 @@ def get_coords
   return x, y
 end
 
+# Display a response to the user of what happened on their last go
 def print_feedback(feedback, x, y, board, moves)
   print "\nFeedback: ".bold
 
@@ -24,7 +26,7 @@ def print_feedback(feedback, x, y, board, moves)
   else
     puts "Miss!"
   end
-  puts "Score: ".bold + moves.to_s + "\n\n"
+  puts "Score: ".bold + "#{moves}\n\n"
 end
 
 if __FILE__ == $0
@@ -33,6 +35,7 @@ if __FILE__ == $0
 
   board = Board.new BOARD_WIDTH, BOARD_HEIGHT
   
+  # Load in the ships this instance of the game uses
   board.load_ships [
     Ship.new("Aircraft Carrier", 5),
     Ship.new("Cruiser", 4),
@@ -46,7 +49,7 @@ if __FILE__ == $0
   board.draw
   until end_game
     free_cell = false
-
+    # Keep asking the user to input coordinates until they give valid ones
     until free_cell
       x, y = get_coords
 

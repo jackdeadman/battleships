@@ -6,6 +6,7 @@ class Board
   def initialize(width, height)
     @width, @height = width, height
     @grid = Grid.new width, height
+    # Set all separately so unique references
     @grid.set_all { GameCell.new :water }
 
     Cell.set_padding(1)
@@ -29,7 +30,6 @@ class Board
       row.each do |cell|
         cell.draw
       end
-
       puts ""
     end
   end
@@ -38,6 +38,7 @@ class Board
     cell = @grid.get_cell x, y
     cell.fire
 
+    # Return a hash of the result of the fire
     {"hit" => cell.contains_ship?,
      "ship_destroyed" => cell.contains_destroyed?,
      "near_miss" => near_miss?(x, y)}
@@ -65,7 +66,7 @@ class Board
   def place_ship(ship)
 
     can_fit = false
-
+    # keep trying ship positions until place it fits into works
     until can_fit
 
       horizontal = rand(2) == 1

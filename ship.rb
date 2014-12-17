@@ -9,7 +9,7 @@ class Ship
   end
 
   def fire
-    @hits += 1
+    @hits += 1 unless destroyed?
   end
 
   def destroyed?
