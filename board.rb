@@ -85,7 +85,8 @@ class Board
       y = rand (0..max_y)
 
       can_fit = true
-
+      # keep trying coords until a place where the ship can fit
+      # into has been found
       if horizontal
         (0...ship.get_size).each do |index|
           if @grid.get_cell(y, x+index).contains_ship?
@@ -102,7 +103,7 @@ class Board
         end
       end
     end
-
+    # Place the ship into the position that has been found that works
     if horizontal
       (0...ship.get_size).each { |index| @grid.set_cell(y,x+index, GameCell.new(ship)) }
     else
